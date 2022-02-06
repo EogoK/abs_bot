@@ -90,7 +90,7 @@ class Feed extends React.Component{
 
 		var self = this;
 
-		fetch("https://eogok.github.io/abs_bot/https://cw28062.tmweb.ru/1.json").then(resp=>resp.json()).then(data=>console.log(data));
+		//fetch("https://eogok.github.io/abs_bot/https://cw28062.tmweb.ru/1.json").then(resp=>resp.json()).then(data=>console.log(data));
 	}
 	
 	notifyPopup(names) {
