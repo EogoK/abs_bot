@@ -1,0 +1,15 @@
+div.parent{
+
+}
+
+div.child{
+	display: inline-block;
+}
+
+div.money{
+
+}
+
+div.time{
+	float: right;
+}

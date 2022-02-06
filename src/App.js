@@ -1,52 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import bridge from '@vkontakte/vk-bridge';
-import { View, ScreenSpinner, AdaptivityProvider, AppRoot, Div } from '@vkontakte/vkui';
+import { View, ScreenSpinner, AdaptivityProvider, AppRoot, Div, PanelHeader, ConfigProvider, Group, Card, CardGrid, Panel} from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
 
+import Footer from "./panels/footer";
+import Feed from "./panels/feed";
 
 
-const App = () => {
-	return (<Div>Hell</Div>);
-}
 
-/*import Home from './panels/Home';
-import Persik from './panels/Persik';
+let schemes;
 
-const App = () => {
-	const [activePanel, setActivePanel] = useState('home');
-	const [fetchedUser, setUser] = useState(null);
-	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
-
-	useEffect(() => {
+class App extends React.Component {
+	constructor(props){
+		super(props);
+		this.state = {fetchedUser:0, data:null, footerState:"feed"}
+	}
+	componentDidMount(){
 		bridge.subscribe(({ detail: { type, data }}) => {
 			if (type === 'VKWebAppUpdateConfig') {
 				const schemeAttribute = document.createAttribute('scheme');
 				schemeAttribute.value = data.scheme ? data.scheme : 'client_light';
+				schemes = data.scheme;
+
 				document.body.attributes.setNamedItem(schemeAttribute);
 			}
 		});
-		async function fetchData() {
+
+		async function fetchData(self) {
 			const user = await bridge.send('VKWebAppGetUserInfo');
-			setUser(user);
-			setPopout(null);
+			self.setState({fetchedUser : user});
+			return 1;
 		}
-		fetchData();
-	}, []);
+		fetchData(this);
+	}
 
-	const go = e => {
-		setActivePanel(e.currentTarget.dataset.to);
-	};
+	render(){
+		return (
+			<ConfigProvider scheme={schemes}>
+				<AdaptivityProvider>
+					<AppRoot>
+						<View activePanel={this.state.footerState}>
+							<Panel id="feed">{this.state.fetchedUser && <Feed user={this.state.fetchedUser}/>}</Panel>
+							<Panel id="eshe">1</Panel>
+							<Panel id="rating">2</Panel>
+						</View>
+						<Footer self={this}/>	
+					</AppRoot>
+				</AdaptivityProvider>
+			</ConfigProvider>
+			);
+	}
+}
 
-	return (
-		<AdaptivityProvider>
-			<AppRoot>
-				<View activePanel={activePanel} popout={popout}>
-					<Home id='home' fetchedUser={fetchedUser} go={go} />
-					<Persik id='persik' go={go} />
-				</View>
-			</AppRoot>
-		</AdaptivityProvider>
-	);
-}*/
 
 export default App;
