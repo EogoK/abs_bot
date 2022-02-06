@@ -90,7 +90,7 @@ class Feed extends React.Component{
 
 		var self = this;
 
-		var header = new Headers();
+		var headers = new Headers();
 		headers.append('Content-Type', 'application/json');
     	headers.append('Accept', 'application/json');
     	headers.append('Origin','http://cw28062.tmweb.ru');
@@ -98,7 +98,7 @@ class Feed extends React.Component{
 		fetch("https://cw28062.tmweb.ru/1.json",{
         mode: 'cors',
         method: 'GET',
-        headers: header
+        headers: headers
     	})
 		.then(resp=>{console.log(resp);})
 		.then(data=>{console.log(data);});
