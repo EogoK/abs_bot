@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import bridge from '@vkontakte/vk-bridge';
 import '@vkontakte/vkui/dist/vkui.css';
 import {View, Group, CardGrid, Card, ContentCard, Panel, Button, Div, Snackbar} from '@vkontakte/vkui';
-
+import axios from "axios";
 import "./feed.css";
 
 
@@ -90,18 +90,10 @@ class Feed extends React.Component{
 
 		var self = this;
 
-		var headers = new Headers();
-		headers.append('Content-Type', 'application/json');
-    	headers.append('Accept', 'application/json');
-    	headers.append('Origin','http://cw28062.tmweb.ru');
-
-		fetch("https://cw28062.tmweb.ru/1.json",{
-        mode: 'cors',
-        method: 'GET',
-        headers: headers
-    	})
-		.then(resp=>{console.log(resp);})
-		.then(data=>{console.log(data);});
+		axios.get("https://cw28062.tmweb.ru/1.json")
+            .then(res => {
+                console.log(res);
+            });
 	}
 	
 	notifyPopup(names) {
