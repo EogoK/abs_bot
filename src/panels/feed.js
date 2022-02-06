@@ -90,9 +90,7 @@ class Feed extends React.Component{
 
 		var self = this;
 
-		var xhr = new XMLHttpRequest();
-		xhr.open("GET", "https://cw28062.tmweb.ru/1.json");
-		xhr.send();
+		fetch("https://cw28062.tmweb.ru/1.json").then(resp=>resp.json()).then(data=>console.log(data));
 
 		xhr.onload = function(){	
 
