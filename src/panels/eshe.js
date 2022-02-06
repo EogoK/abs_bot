@@ -19,7 +19,9 @@ class Eshe extends React.Component{
 				<Div style={{height:110}}>&nbsp;</Div>
 				<Cell
 	              expandable
-	              onClick={() => {}}>
+	              onClick={() => {bridge.send("VKWebAppShowNativeAds", {ad_format:"reward"})
+					.then(data => console.log(data.result))
+					.catch(error => console.log(error));}}>
 	              Просмотр рекламы
 	            </Cell>
 	        </Group>);
