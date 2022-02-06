@@ -90,7 +90,7 @@ class Feed extends React.Component{
 
 		var self = this;
 
-		axios.get("https://cw28062.tmweb.ru/1.json")
+		axios.get("https://cw28062.tmweb.ru/1.json", {headers: {"Access-Control-Allow-Origin": "*"}})
             .then(res => {
                 console.log(res);
             });
