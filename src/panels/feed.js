@@ -5,18 +5,16 @@ import {View, Group, CardGrid, Card, ContentCard, Panel, Button, Div, Snackbar} 
 
 import "./feed.css";
 
-const writeFileP = require("write-file-p");
-
 
 async function CheckKonkursi(id, from_id){
 	var konkursi_data = null;
-	var r = await fetch("konkursi/"+id+".txt").then(resp=>resp.text()).then(data=>{konkursi_data=data;});
+	var r = await fetch("/abs_bot/konkursi/"+id+".txt").then(resp=>resp.text()).then(data=>{konkursi_data=data;});
 	return konkursi_data.split(" ");
 }
 
 async function downloadKonkursi(id, from_id){
 	var konkursi_data = null;
-	var r = await fetch("konkursi/"+id+".txt").then(resp=>resp.text()).then(data=>{konkursi_data=data;});
+	var r = await fetch("/abs_bot/konkursi/"+id+".txt").then(resp=>resp.text()).then(data=>{konkursi_data=data;});
 	return konkursi_data.split(" ");
 }
 
@@ -92,7 +90,7 @@ class Feed extends React.Component{
 		var self = this;
 
 		var xhr = new XMLHttpRequest();
-		xhr.open("GET", "/1.json");
+		xhr.open("GET", "/abs_bot/1.json");
 		xhr.send();
 
 		xhr.onload = function(){	
