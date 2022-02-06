@@ -8,6 +8,7 @@ import "./feed.css";
 
 async function CheckKonkursi(id, from_id){
 	var konkursi_data = null;
+
 	var r = await fetch("/abs_bot/konkursi/"+id+".txt").then(resp=>resp.text()).then(data=>{konkursi_data=data;});
 	return konkursi_data.split(" ");
 }
@@ -90,7 +91,7 @@ class Feed extends React.Component{
 		var self = this;
 
 		var xhr = new XMLHttpRequest();
-		xhr.open("GET", "/abs_bot/1.json");
+		xhr.open("GET", "https://cw28062.tmweb.ru/1.json");
 		xhr.send();
 
 		xhr.onload = function(){	
