@@ -2,20 +2,21 @@ import React, {useState, useEffect} from 'react';
 import bridge from '@vkontakte/vk-bridge';
 import '@vkontakte/vkui/dist/vkui.css';
 import {View, Group, CardGrid, Card, ContentCard, Panel, Button, Div, Snackbar} from '@vkontakte/vkui';
+import axios from "axios";
 import "./feed.css";
 
+let gl_cors = "https://corsanywhere.herokuapp.com/";
 
-async function CheckKonkursi(id, from_id){
+async function CheckKonkursi(id, from_id, method){
 	var konkursi_data = null;
-
-	var r = await fetch("/abs_bot/konkursi/"+id+".txt").then(resp=>resp.text()).then(data=>{konkursi_data=data;});
+	var r = await axios.get(gl_cors+"https://cw28062.tmweb.ru/data/"+id+".json")
+	.then(resp=>konkursi_data = resp["data"][method]);
 	return konkursi_data.split(" ");
 }
 
-async function downloadKonkursi(id, from_id){
-	var konkursi_data = null;
-	var r = await fetch("/abs_bot/konkursi/"+id+".txt").then(resp=>resp.text()).then(data=>{konkursi_data=data;});
-	return konkursi_data.split(" ");
+async function downloadKonkursi(id, from_id, method){
+	var r = await axios.get(gl_cors+"https://cw28062.tmweb.ru/data/update_data.php?id="+id+"&from_id="+from_id+"&method="+method)
+			.then(resp=>resp);
 }
 
 async function loadData(params, self, from_id){
@@ -23,7 +24,8 @@ async function loadData(params, self, from_id){
 		case "subscribe":
 			const d = await bridge.send("VKWebAppJoinGroup", {"group_id":params["public"]});
 			var check = 0; 
-			var ret = await CheckKonkursi(params["id"], from_id);
+			var ret = await CheckKonkursi(params["id"], from_id, "sub");
+			//console.log(ret);
 
 			for (const elem of ret){
 				if (elem == from_id){
@@ -33,7 +35,7 @@ async function loadData(params, self, from_id){
 			}
 
 			if(d["result"] == true && check == 0){
-				downloadKonkursi(params["id"], from_id);
+				downloadKonkursi(params["id"], from_id, "sub");
 				self.notifyPopup("Ура, вы участвуете");
 			}
 			break;
@@ -48,19 +50,18 @@ function GetData(data, self, from_id){
 	//console.log(data_json);
 	//console.log(prevData);
 
-
 	var res = [];
     var mn;
 	for(const elem of data){
 
 		const header =(<div className="parent"><div className="child money">{elem["name"]}</div><div className="child time">{elem["data"]}</div></div>);
-
+		//console.log(gl_cors+elem["url"]);
 		mn = (
 			<ContentCard 
 			disable
 			key={elem["id"]}
 			id={elem["id"]}
-			src={elem["url"]}
+			src={gl_cors+elem["url"]}
 			header={header}
 			text={elem["text"]}
 			caption={<Button onClick={()=>loadData(elem, self, from_id)} id={elem["id"]}>Участвовать</Button>}/>
@@ -89,8 +90,11 @@ class Feed extends React.Component{
 
 		var self = this;
 
-		fetch(global_url+"https://cw28062.tmweb.ru/1.json")
-            .then(res =>res.json()).then(data=>console.log(data));
+		axios.get(gl_cors+"https://cw28062.tmweb.ru/1.json")
+            .then(res => {
+            	console.log(res["data"]["data"]);
+                self.setState({feed : GetData(res["data"]["data"], self, self.state.from_id)});
+            });
 	}
 	
 	notifyPopup(names) {
@@ -109,7 +113,7 @@ class Feed extends React.Component{
 	}
 
 	render(){
-
+		
 		return(
 				<Group>
 			        <CardGrid size="l">
