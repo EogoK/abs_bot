@@ -89,7 +89,17 @@ class Feed extends React.Component{
 	updateFeed(){
 
 		var self = this;
-		fetch("https://cw28062.tmweb.ru/1.json")
+
+		var header = new Headers();
+		headers.append('Content-Type', 'application/json');
+    	headers.append('Accept', 'application/json');
+    	headers.append('Origin','http://cw28062.tmweb.ru');
+
+		fetch("https://cw28062.tmweb.ru/1.json",{
+        mode: 'cors',
+        method: 'GET',
+        headers: header
+    	})
 		.then(resp=>{console.log(resp);})
 		.then(data=>{console.log(data);});
 	}
