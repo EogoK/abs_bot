@@ -90,7 +90,7 @@ class Feed extends React.Component{
 
 		var self = this;
 
-		axios.get("https://cw28062.tmweb.ru/1.json", {crossdomain: true})
+		axios.get("https://cors-anywhere.herokuapp.com/https://cw28062.tmweb.ru/1.json")
             .then(res => {
                 console.log(res);
             });
