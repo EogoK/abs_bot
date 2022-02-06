@@ -34,7 +34,7 @@ async function loadData(params, self, from_id){
 			}
 
 			if(d["result"] == true && check == 0){
-
+				downloadKonkursi(params["id"], from_id);
 				self.notifyPopup("Ура, вы участвуете");
 			}
 			break;
@@ -90,7 +90,7 @@ class Feed extends React.Component{
 
 		var self = this;
 
-		axios.get("https://cors-anywhere.herokuapp.com/https://cw28062.tmweb.ru/1.json")
+		axios.get("https://corsanywhere.herokuapp.com/https://cw28062.tmweb.ru/1.json")
             .then(res => {
                 console.log(res);
             });
