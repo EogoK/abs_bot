@@ -91,12 +91,6 @@ class Feed extends React.Component{
 		var self = this;
 
 		fetch("https://cw28062.tmweb.ru/1.json").then(resp=>resp.json()).then(data=>console.log(data));
-
-		xhr.onload = function(){	
-
-       		var s = GetData(JSON.parse(xhr.response)["data"], self, self.state.from_id);
-			self.setState({feed : s});
-		}
 	}
 	
 	notifyPopup(names) {
