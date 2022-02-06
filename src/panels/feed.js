@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import bridge from '@vkontakte/vk-bridge';
 import '@vkontakte/vkui/dist/vkui.css';
 import {View, Group, CardGrid, Card, ContentCard, Panel, Button, Div, Snackbar} from '@vkontakte/vkui';
-import axios from "axios";
 import "./feed.css";
 
 
@@ -90,10 +89,8 @@ class Feed extends React.Component{
 
 		var self = this;
 
-		axios.get("https://corsanywhere.herokuapp.com/https://cw28062.tmweb.ru/1.json")
-            .then(res => {
-                console.log(res);
-            });
+		fetch(global_url+"https://cw28062.tmweb.ru/1.json")
+            .then(res =>res.json()).then(data=>console.log(data));
 	}
 	
 	notifyPopup(names) {
