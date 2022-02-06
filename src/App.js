@@ -5,7 +5,7 @@ import '@vkontakte/vkui/dist/vkui.css';
 
 import Footer from "./panels/footer";
 import Feed from "./panels/feed";
-
+import Eshe from "./panels/eshe";
 
 
 let schemes;
@@ -40,9 +40,9 @@ class App extends React.Component {
 				<AdaptivityProvider>
 					<AppRoot>
 						<View activePanel={this.state.footerState}>
-							<Panel id="feed">{this.state.fetchedUser && <Feed user={this.state.fetchedUser}/>}</Panel>
-							<Panel id="eshe">1</Panel>
+							<Panel id="eshe"><Eshe/></Panel>
 							<Panel id="rating">2</Panel>
+							<Panel id="feed">{this.state.fetchedUser && <Feed user={this.state.fetchedUser}/>}</Panel>
 						</View>
 						<Footer self={this}/>	
 					</AppRoot>

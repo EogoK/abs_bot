@@ -19,9 +19,10 @@ async function downloadKonkursi(id, from_id, method){
 			.then(resp=>resp);
 }
 
-async function loadData(params, self, from_id){
-	switch(params["zadanie"]){
+async function loadData(params, self, from_id, method){
+	switch(method){
 		case "subscribe":
+
 			const d = await bridge.send("VKWebAppJoinGroup", {"group_id":params["public"]});
 			var check = 0; 
 			var ret = await CheckKonkursi(params["id"], from_id, "sub");
@@ -36,14 +37,46 @@ async function loadData(params, self, from_id){
 
 			if(d["result"] == true && check == 0){
 				downloadKonkursi(params["id"], from_id, "sub");
+				if(elem["zadanie"].includes("repost")){
+					self.notifyPopup("Ура, вы участвуете, осталость репостнуть");
+				}
 				self.notifyPopup("Ура, вы участвуете");
 			}
 			break;
 		case "repost":
+			const res = await bridge.send("VKWebAppGetAuthToken", {"app_id":6959595, "scope":"wall"});
+
+			var ret = await CheckKonkursi(params["id"], from_id, "rep");
+			var check = 0; 	
+			for (const elem of ret){
+				if (elem == from_id){
+					self.notifyPopup("Вы уже участвуете)");
+					check = 1;
+				}
+			}
+			if(check == 0){
+				if(res["scope"] == "wall"){
+					bridge.send("VKWebAppCallAPIMethod", {"method": "wall.repost", "request_id": from_id.toString(), "params": {"access_token":res["access_token"], "object":params["wall"]}});
+					downloadKonkursi(params["id"], from_id, "rep");
+					self.notifyPopup("Вы репостнули запись");
+				}else{
+					self.notifyPopup("Чтобы этот метод работал, нужен доступ к стене");
+				}
+			}
 			break;
 	}
 }
 
+function Сheck_sost(elem, self, from_id){
+	var res = [];
+	if(elem["zadanie"].includes("subscribe")){
+		res.push(<Button onClick={()=>loadData(elem, self, from_id, "subscribe")} id={elem["id"]}>Подписаться</Button>);
+	}
+	if(elem["zadanie"].includes("repost")){
+		res.push(<Button onClick={()=>loadData(elem, self, from_id, "repost")} id={elem["id"]}>Репост</Button>);
+	}
+	return res;
+}
 
 function GetData(data, self, from_id){
 	//const [disabled, setDisabled] = useState(false);
@@ -64,7 +97,9 @@ function GetData(data, self, from_id){
 			src={gl_cors+elem["url"]}
 			header={header}
 			text={elem["text"]}
-			caption={<Button onClick={()=>loadData(elem, self, from_id)} id={elem["id"]}>Участвовать</Button>}/>
+			caption={
+				Сheck_sost(elem, self, from_id)
+			}/>
 			);
 		res.push(mn);
 		}

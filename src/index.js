@@ -4,7 +4,6 @@ import bridge from "@vkontakte/vk-bridge";
 import App from "./App";
 
 
-let global_url = "https://cors-anywhere.herokuapp.com/";
 // Init VK  Mini App
 bridge.send("VKWebAppInit");
 
