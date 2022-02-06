@@ -89,7 +89,7 @@ class Feed extends React.Component{
 	updateFeed(){
 
 		var self = this;
-		fetch("https://cw28062.tmweb.ru/1.json", {mode:"no-cors"})
+		fetch("https://cw28062.tmweb.ru/1.json")
 		.then(resp=>{console.log(resp);})
 		.then(data=>{console.log(data);});
 	}
