@@ -52,7 +52,7 @@ class App extends React.Component {
 			<ConfigProvider scheme={schemes}>
 				<AdaptivityProvider>
 					<AppRoot>
-					<Button onClick={()=>{bridge.send("VKWebAppShowNativeAds", {ad_format:"preloader"})}}>1</Button>
+					<Button onClick={()=>{bridge.send("VKWebAppShowNativeAds", {ad_format:"reward"})}}>1</Button>
 					</AppRoot>
 				</AdaptivityProvider>
 			</ConfigProvider>
