@@ -11,25 +11,6 @@ import Eshe from "./panels/eshe";
 let schemes;
 
 function func() {
-	window.addEventListener('load', function() {
-
-				var user_id = 256889215;
-				var app_id = 6959595;
-
-				admanInit({
-				  user_id: user_id,
-				  app_id: app_id,
-				  type: 'rewarded'
-				}, onAdsReady, onNoAds);
-
-				function onAdsReady(adman) {
-				  adman.onStarted(function () { admanStat(app_id, user_id); });
-				  adman.start('preroll');
-				};
-
-				function onNoAds() {};
-				});
-
 
 	bridge.send("VKWebAppShowNativeAds", {"ad_format": "reward"});
 }
@@ -71,7 +52,11 @@ class App extends React.Component {
 			<ConfigProvider scheme={schemes}>
 				<AdaptivityProvider>
 					<AppRoot>
-					<Button onClick={()=>{func();}}>1</Button>
+							<App>
+							<View>
+								<Button onClick={()=>{bridge.send("VKWebAppShowNativeAds", {ad_format:"preloader"})}}>1</Button>
+							</View>
+							</App>
 					</AppRoot>
 				</AdaptivityProvider>
 			</ConfigProvider>
