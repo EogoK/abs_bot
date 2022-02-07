@@ -52,7 +52,14 @@ class App extends React.Component {
 			<ConfigProvider scheme={schemes}>
 				<AdaptivityProvider>
 					<AppRoot>
-					<Button onClick={()=>{bridge.send("VKWebAppShowNativeAds", {ad_format:"reward"})}}>1</Button>
+							<App>
+								<View activePanel={this.state.footerState}>
+									<Panel id="eshe"><Eshe/></Panel>
+									<Panel id="rating">2</Panel>
+									<Panel id="feed">{this.state.fetchedUser && <Feed user={this.state.fetchedUser}/>}</Panel>
+								</View>
+								<Footer self={this}/>
+							</App>
 					</AppRoot>
 				</AdaptivityProvider>
 			</ConfigProvider>
