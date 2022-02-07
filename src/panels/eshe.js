@@ -4,7 +4,13 @@ import '@vkontakte/vkui/dist/vkui.css';
 import {Cell, Div, Group} from '@vkontakte/vkui';
 import axios from "axios";
 
+async function ads(){
 
+	var r = await bridge.send("VKWebAppShowNativeAds", {ad_format:"reward", "use_waterfall":true})
+	.then(data => console.log(data.result))
+	.catch(error => console.log(error));
+	console.log(r);
+}
 
 class Eshe extends React.Component{
 	constructor(props){
@@ -19,9 +25,7 @@ class Eshe extends React.Component{
 				<Div style={{height:110}}>&nbsp;</Div>
 				<Cell
 	              expandable
-	              onClick={() => {bridge.send("VKWebAppShowNativeAds", {ad_format:"reward"})
-					.then(data => console.log(data.result))
-					.catch(error => console.log(error));}}>
+	              onClick={() => {ads();}}>
 	              Просмотр рекламы
 	            </Cell>
 	        </Group>);

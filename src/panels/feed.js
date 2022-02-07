@@ -5,7 +5,7 @@ import {View, Group, CardGrid, Card, ContentCard, Panel, Button, Div, Snackbar} 
 import axios from "axios";
 import "./feed.css";
 
-let gl_cors = "https://corsanywhere.herokuapp.com/";
+let gl_cors = "https://cors.eu.org/";
 
 async function CheckKonkursi(id, from_id, method){
 	var konkursi_data = null;
