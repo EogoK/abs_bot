@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import bridge from '@vkontakte/vk-bridge';
-import {Button, View, ScreenSpinner, AdaptivityProvider, AppRoot, Div, PanelHeader, ConfigProvider, Group, Card, CardGrid, Panel} from '@vkontakte/vkui';
+import { View, ScreenSpinner, AdaptivityProvider, AppRoot, Div, PanelHeader, ConfigProvider, Group, Card, CardGrid, Panel} from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
 
 import Footer from "./panels/footer";
@@ -9,11 +9,6 @@ import Eshe from "./panels/eshe";
 
 
 let schemes;
-
-function func() {
-
-	bridge.send("VKWebAppShowNativeAds", {"ad_format": "reward"});
-}
 
 class App extends React.Component {
 	constructor(props){
@@ -38,28 +33,19 @@ class App extends React.Component {
 		}
 		fetchData(this);
 	}
-/*
-<View activePanel={this.state.footerState}>
-							<Panel id="eshe"><Eshe/></Panel>
-							<Panel id="rating">2</Panel>
-							<Panel id="feed">{this.state.fetchedUser && <Feed user={this.state.fetchedUser}/>}</Panel>
-						</View>
-						<Footer self={this}/>*/
 
 	render(){
-		
+
 		return (
 			<ConfigProvider scheme={schemes}>
 				<AdaptivityProvider>
 					<AppRoot>
-							<App>
-								<View activePanel={this.state.footerState}>
-									<Panel id="eshe"><Eshe/></Panel>
-									<Panel id="rating">2</Panel>
-									<Panel id="feed">{this.state.fetchedUser && <Feed user={this.state.fetchedUser}/>}</Panel>
-								</View>
-								<Footer self={this}/>
-							</App>
+						<View activePanel={this.state.footerState}>
+							<Panel id="eshe"><Eshe/></Panel>
+							<Panel id="rating">2</Panel>
+							<Panel id="feed">{this.state.fetchedUser && <Feed user={this.state.fetchedUser}/>}</Panel>
+						</View>
+						<Footer self={this}/>	
 					</AppRoot>
 				</AdaptivityProvider>
 			</ConfigProvider>
