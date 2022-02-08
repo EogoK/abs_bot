@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import bridge from '@vkontakte/vk-bridge';
-import { View, ScreenSpinner, AdaptivityProvider, AppRoot, Div, PanelHeader, ConfigProvider, Group, Card, CardGrid, Panel} from '@vkontakte/vkui';
+import {PanelHeader, PanelHeaderBack, SplitLayout, View, ScreenSpinner, AdaptivityProvider, AppRoot, Div, ConfigProvider, Group, Panel, ModalRoot, ModalPage, ModalCard, SplitCol} from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
 
 import Footer from "./panels/footer";
@@ -13,7 +13,7 @@ let schemes;
 class App extends React.Component {
 	constructor(props){
 		super(props);
-		this.state = {fetchedUser:0, data:null, footerState:"feed"}
+		this.state = {fetchedUser:0, data:null, footerState:"feed", update:null, snackbar:null}
 	}
 	componentDidMount(){
 		bridge.subscribe(({ detail: { type, data }}) => {
@@ -28,6 +28,7 @@ class App extends React.Component {
 
 		async function fetchData(self) {
 			const user = await bridge.send('VKWebAppGetUserInfo');
+			bridge.send("VKWebAppResizeWindow", {"width": 800, "height": 1000});
 			self.setState({fetchedUser : user});
 			return 1;
 		}
@@ -39,14 +40,20 @@ class App extends React.Component {
 		return (
 			<ConfigProvider scheme={schemes}>
 				<AdaptivityProvider>
-					<AppRoot>
+				<AppRoot>
 						<View activePanel={this.state.footerState}>
 							<Panel id="eshe"><Eshe/></Panel>
-							<Panel id="rating">2</Panel>
-							<Panel id="feed">{this.state.fetchedUser && <Feed user={this.state.fetchedUser}/>}</Panel>
+							<Panel id="rating"></Panel>
+							<Panel id="feed">{this.state.fetchedUser && <Feed user={this.state.fetchedUser} self={this}/>}</Panel>
+							<Panel id="update"><PanelHeader
+            						left={
+              						<PanelHeaderBack
+                						onClick={() => this.setState({footerState:"feed"})}/>}>
+          							</PanelHeader>{this.state.update}</Panel>
 						</View>
 						<Footer self={this}/>	
-					</AppRoot>
+						{this.state.snackbar}
+				</AppRoot>
 				</AdaptivityProvider>
 			</ConfigProvider>
 			);

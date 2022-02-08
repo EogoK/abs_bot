@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import bridge from '@vkontakte/vk-bridge';
 import '@vkontakte/vkui/dist/vkui.css';
-import {View, Group, CardGrid, Card, ContentCard, Panel, Button, Div, Snackbar} from '@vkontakte/vkui';
+import {View, Group, CardGrid, Card, ContentCard, Panel, Button, Div, Snackbar, ModalRoot, PanelHeader, PanelHeaderBack } from '@vkontakte/vkui';
 import axios from "axios";
 import "./feed.css";
 
@@ -26,7 +26,6 @@ async function loadData(params, self, from_id, method){
 			const d = await bridge.send("VKWebAppJoinGroup", {"group_id":params["public"]});
 			var check = 0; 
 			var ret = await CheckKonkursi(params["id"], from_id, "sub");
-			//console.log(ret);
 
 			for (const elem of ret){
 				if (elem == from_id){
@@ -70,12 +69,34 @@ async function loadData(params, self, from_id, method){
 function Сheck_sost(elem, self, from_id){
 	var res = [];
 	if(elem["zadanie"].includes("subscribe")){
-		res.push(<Button onClick={()=>loadData(elem, self, from_id, "subscribe")} id={elem["id"]}>Подписаться</Button>);
+		res.push(<Button onClick={()=>loadData(elem, self, from_id, "subscribe")} id={elem["id"]} style={{width:"25%"}}>Подписаться</Button>);
 	}
 	if(elem["zadanie"].includes("repost")){
-		res.push(<Button onClick={()=>loadData(elem, self, from_id, "repost")} id={elem["id"]}>Репост</Button>);
+		//res.push(<div>&nbsp;</div>);
+		res.push(<Button style={{width:"25%", position: "absolute", right: 0}} onClick={()=>loadData(elem, self, from_id, "repost")} id={elem["id"]}>Репост</Button>);
 	}
 	return res;
+}
+
+
+function panel_update(elem, self, from_id){
+	var Ret_modal_okno = Сheck_sost(elem, self, from_id);
+
+
+	return (
+	<Group>
+	{Ret_modal_okno}
+	<CardGrid size="l">
+          <Card>
+            <img src={gl_cors+elem["url"]}></img>
+          </Card>
+        </CardGrid>
+	</Group>);
+}
+
+function Modal_okno(elem, self, from_id){
+	self.main_app.setState({footerState:"update"});
+	self.main_app.setState({update: panel_update(elem, self, from_id)});
 }
 
 function GetData(data, self, from_id){
@@ -94,12 +115,11 @@ function GetData(data, self, from_id){
 			disable
 			key={elem["id"]}
 			id={elem["id"]}
-			src={gl_cors+elem["url"]}
 			header={header}
 			text={elem["text"]}
+			maxHeight={500}
 			caption={
-				Сheck_sost(elem, self, from_id)
-			}/>
+				<Button onClick={()=>{Modal_okno(elem, self, from_id)}}>Участвовать</Button>}/>
 			);
 		res.push(mn);
 		}
@@ -118,6 +138,7 @@ class Feed extends React.Component{
 			feed: null,
 			from_id: props["user"]["id"]};
 
+		this.main_app = props["self"];
 
 		this.notifyPopup = this.notifyPopup.bind(this);
 	}
@@ -133,27 +154,28 @@ class Feed extends React.Component{
 	}
 	
 	notifyPopup(names) {
-	    if (this.state.snackbar) return;
-	    this.setState({
+	    if (this.main_app.snackbar) return;
+	    this.main_app.setState({
 	      snackbar: (
-	        <Snackbar filled onClose={() => this.setState({ snackbar: null })} style={{zIndex:99999999}}>
+	        <Snackbar filled onClose={() => this.main_app.setState({ snackbar: null })} style={{zIndex:99999999}}>
 	          {names}
 	        </Snackbar>
-	      ),
+	      )
 	    });
   	}
 
 	componentDidMount(){
 		this.updateFeed();
 	}
-
+	componentWillMount(){
+	}
 	render(){
 		
 		return(
+				
 				<Group>
 			        <CardGrid size="l">
 			        	{this.state.feed}
-			        	{this.state.snackbar}
 			        </CardGrid>
 			    </Group>
 			);
