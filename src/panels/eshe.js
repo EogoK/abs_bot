@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import bridge from '@vkontakte/vk-bridge';
 import '@vkontakte/vkui/dist/vkui.css';
-import {Cell, Div, Group, Button} from '@vkontakte/vkui';
+import {Cell, Div, Group, Button, Snackbar} from '@vkontakte/vkui';
 import axios from "axios";
 
 async function ads(self_class){
