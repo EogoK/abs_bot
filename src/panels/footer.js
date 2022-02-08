@@ -1,7 +1,7 @@
 import React, {useState, useEffect, setState} from 'react';
 import bridge from '@vkontakte/vk-bridge';
 import '@vkontakte/vkui/dist/vkui.css';
-import {Div, View, PanelHeader, TabbarItem, Tabbar, FixedLayout, Tabs, TabsItem, Panel} from '@vkontakte/vkui';
+import {Div, View, PanelHeader, TabbarItem, Tabbar, FixedLayout, Tabs, TabsItem, Panel, Snackbar} from '@vkontakte/vkui';
 import { Icon56FireOutline } from '@vkontakte/icons';
 import { Icon28Users3Outline } from '@vkontakte/icons';
 import { Icon28More } from '@vkontakte/icons';
@@ -19,7 +19,20 @@ class Footer extends React.Component {
 		super(props);
 		this.state = {menu:"feed"};
 		this.self = props.self;
+
+		this.notifyPopup = this.notifyPopup.bind(this);
 	}
+
+	notifyPopup(names) {
+	    if (this.self.snackbar) return;
+	    this.self.setState({
+	      snackbar: (
+	        <Snackbar filled onClose={() => this.self.setState({ snackbar: null })} style={{zIndex:99999999}}>
+	          {names}
+	        </Snackbar>
+	      )
+	    });
+  	}
 
 	render(){
 
@@ -30,7 +43,7 @@ class Footer extends React.Component {
 			<Tabs>
 			<TabsItem 
 				 selected={this.state.menu ===PARAMS.rate}
-				 onClick={()=>{this.setState({menu:PARAMS.rate}); self.setState({footerState:PARAMS.rate});}}
+				 onClick={()=>{this.notifyPopup("В разработке");/*this.setState({menu:PARAMS.rate}); self.setState({footerState:PARAMS.rate});*/}}
 				 style={this.state.menu ===PARAMS.rate ? {color:"#5D3FD3", paddingTop:25} : {paddingTop:25}}>
 				 <Icon28Users3Outline
 				  		style={this.state.menu ===PARAMS.rate ? {background:"", paddingLeft:17} : {paddingLeft:17}}/>

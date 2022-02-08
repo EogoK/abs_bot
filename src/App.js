@@ -43,7 +43,6 @@ class App extends React.Component {
 				<AppRoot>
 						<View activePanel={this.state.footerState}>
 							<Panel id="eshe"><Eshe self={this}/></Panel>
-							<Panel id="rating"></Panel>
 							<Panel id="feed">{this.state.fetchedUser && <Feed user={this.state.fetchedUser} self={this}/>}</Panel>
 							<Panel id="update"><PanelHeader
             						left={
