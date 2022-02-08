@@ -69,11 +69,11 @@ async function loadData(params, self, from_id, method){
 function Сheck_sost(elem, self, from_id){
 	var res = [];
 	if(elem["zadanie"].includes("subscribe")){
-		res.push(<Button onClick={()=>loadData(elem, self, from_id, "subscribe")} id={elem["id"]} style={{width:"25%"}}>Подписаться</Button>);
+		res.push(<Button onClick={()=>loadData(elem, self, from_id, "subscribe")} id={elem["id"]} size="l" style={{width:"48%"}}>Подписаться</Button>);
 	}
 	if(elem["zadanie"].includes("repost")){
 		//res.push(<div>&nbsp;</div>);
-		res.push(<Button style={{width:"25%", position: "absolute", right: 0}} onClick={()=>loadData(elem, self, from_id, "repost")} id={elem["id"]}>Репост</Button>);
+		res.push(<Button style={{width:"48%", position: "absolute", right: 0}} size="l" onClick={()=>loadData(elem, self, from_id, "repost")} id={elem["id"]}>Репост</Button>);
 	}
 	return res;
 }
@@ -85,12 +85,9 @@ function panel_update(elem, self, from_id){
 
 	return (
 	<Group>
-	{Ret_modal_okno}
-	<CardGrid size="l">
-          <Card>
-            <img src={gl_cors+elem["url"]}></img>
-          </Card>
-        </CardGrid>
+     <img id="image" src={gl_cors+elem["url"]}></img>
+     	{Ret_modal_okno}
+     <Div style={{height:110}}>&nbsp;</Div>
 	</Group>);
 }
 
@@ -108,7 +105,16 @@ function GetData(data, self, from_id){
     var mn;
 	for(const elem of data){
 
-		const header =(<div className="parent"><div className="child money">{elem["name"]}</div><div className="child time">{elem["data"]}</div></div>);
+		const header =(
+			<div className="parent">
+				<img id="image1" src={gl_cors+elem["url"]}></img>
+				<div className="child money">
+				{elem["name"]}
+				</div>
+				<div className="child time">
+				{elem["data"]}
+				</div>
+				</div>);
 		//console.log(gl_cors+elem["url"]);
 		mn = (
 			<ContentCard 

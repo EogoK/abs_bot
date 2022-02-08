@@ -13,3 +13,27 @@ div.money{
 div.time{
 	float: right;
 }
+
+
+#image{
+	border-radius: 10px;
+	left:0;
+	width:100%;
+	max-width: 800px;
+	max-height: 400px;
+	height: 100%;
+}
+
+#image1{
+	padding: 1rem;
+  	position: relative;
+  	background: linear-gradient(to top, red, purple);
+  	padding: 3px;
+	border-radius: 10px;
+	margin: 0;
+	left:0;
+	width:100%;
+	max-width: 800px;
+	max-height: 400px;
+	height: 100%;
+}
