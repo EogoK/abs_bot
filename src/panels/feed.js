@@ -3,11 +3,12 @@ import bridge from '@vkontakte/vk-bridge';
 import '@vkontakte/vkui/dist/vkui.css';
 import {View, Group, CardGrid, Card, ContentCard, Panel, Button, Div, Snackbar, ModalRoot, PanelHeader, PanelHeaderBack } from '@vkontakte/vkui';
 import axios from "axios";
+import { Icon20Users } from '@vkontakte/icons';
 import "./feed.css";
 
 let gl_cors = "https://cors.eu.org/";
 
-async function CheckKonkursi(id, from_id, method){
+async function CheckKonkursi(id, method){
 	var konkursi_data = null;
 	var r = await axios.get(gl_cors+"https://cw28062.tmweb.ru/data/"+id+".json")
 	.then(resp=>konkursi_data = resp["data"][method]);
@@ -25,7 +26,7 @@ async function loadData(params, self, from_id, method){
 
 			const d = await bridge.send("VKWebAppJoinGroup", {"group_id":params["public"]});
 			var check = 0; 
-			var ret = await CheckKonkursi(params["id"], from_id, "sub");
+			var ret = await CheckKonkursi(params["id"], "sub");
 
 			for (const elem of ret){
 				if (elem == from_id){
@@ -45,7 +46,7 @@ async function loadData(params, self, from_id, method){
 		case "repost":
 			const res = await bridge.send("VKWebAppGetAuthToken", {"app_id":6959595, "scope":"wall"});
 
-			var ret = await CheckKonkursi(params["id"], from_id, "rep");
+			var ret = await CheckKonkursi(params["id"], "rep");
 			var check = 0; 	
 			for (const elem of ret){
 				if (elem == from_id){
@@ -96,7 +97,28 @@ function Modal_okno(elem, self, from_id){
 	self.main_app.setState({update: panel_update(elem, self, from_id)});
 }
 
-function GetData(data, self, from_id){
+async function get_active(elem, self){
+
+	var res;
+	var res1;
+	var result;
+
+	if(elem["zadanie"].includes("subscribe")){
+		var res = await CheckKonkursi(elem["id"], "sub");
+	}
+	if(elem["zadanie"].includes("repost")){
+		var res1 = await CheckKonkursi(elem["id"], "rep");
+	}
+
+	if(res != [] && res1 != []){
+		result = res.filter( x => res1.includes(x));
+	} else{
+		result = res != [] ? res : res1;
+	}
+	return result.length;
+}
+
+async function GetData(data, self, from_id){
 	//const [disabled, setDisabled] = useState(false);
 	//console.log(data_json);
 	//console.log(prevData);
@@ -104,6 +126,7 @@ function GetData(data, self, from_id){
 	var res = [];
     var mn;
 	for(const elem of data){
+		var r = await get_active(elem, self);
 
 		const header =(
 			<div className="parent">
@@ -112,7 +135,17 @@ function GetData(data, self, from_id){
 				{elem["name"]}
 				</div>
 				<div className="child time">
+				<div>
 				{elem["data"]}
+				</div>
+				<div style={{color:"#B0BF1A"}}>
+				<div style={{display:"inline-block"}}>
+				<Icon20Users/>
+				</div>
+				<div style={{display:"inline-block", paddingLeft:"5px"}}>
+				{r}
+				</div>
+				</div>
 				</div>
 				</div>);
 		//console.log(gl_cors+elem["url"]);
@@ -135,6 +168,16 @@ function GetData(data, self, from_id){
 }
 
 
+async function update(self){
+	var data;
+	var r = await axios.get(gl_cors+"https://cw28062.tmweb.ru/1.json")
+            .then(res => {
+            	data = res;
+            });
+
+    self.setState({feed : await GetData(data["data"]["data"], self, self.state.from_id)});
+}
+
 class Feed extends React.Component{
 	constructor(props){
 		super(props);
@@ -142,6 +185,7 @@ class Feed extends React.Component{
 		this.state = {
 			snackbar: null,
 			feed: null,
+			people: [],
 			from_id: props["user"]["id"]};
 
 		this.main_app = props["self"];
@@ -152,11 +196,7 @@ class Feed extends React.Component{
 
 		var self = this;
 
-		axios.get(gl_cors+"https://cw28062.tmweb.ru/1.json")
-            .then(res => {
-            	console.log(res["data"]["data"]);
-                self.setState({feed : GetData(res["data"]["data"], self, self.state.from_id)});
-            });
+		update(self);
 	}
 	
 	notifyPopup(names) {
@@ -172,8 +212,10 @@ class Feed extends React.Component{
 
 	componentDidMount(){
 		this.updateFeed();
+
 	}
 	componentWillMount(){
+		return;
 	}
 	render(){
 		
