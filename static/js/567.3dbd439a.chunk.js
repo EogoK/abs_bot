@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmini_apps_rassilka=self.webpackChunkmini_apps_rassilka||[]).push([[567],{4567:function(a,s,i){i.r(s);var n=i(9779),p=i(7533),e=i(3585);n.init(),n.add(p),n.add(e),s.default=n}}]);
+//# sourceMappingURL=567.3dbd439a.chunk.js.map
