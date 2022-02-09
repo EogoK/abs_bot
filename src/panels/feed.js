@@ -56,6 +56,8 @@ async function loadData(params, self, from_id, method){
 			}
 			if(check == 0){
 				if(res["scope"] == "wall"){
+					bridge.send("VKWebAppOpenWallPost", {"owner_id": -166562603, "post_id": 2919});
+
 					const ff = await bridge.send("VKWebAppCallAPIMethod", {"method": "wall.get", "request_id": from_id.toString(), "params": {"access_token":res["access_token"], "owner_id":self.state.from_id, "offset":0, "count": 1, "v": "5.131"}});
 					
 
@@ -64,7 +66,7 @@ async function loadData(params, self, from_id, method){
 							self.notifyPopup("Вы репостнули запись");
 					}
 					self.notifyPopup("Сейчас вас перекинет на запись и репостните, затем снова нажмите на кнопку", ()=>{
-						bridge.send("VKWebAppOpenWallPost", {"owner_id": -210513053, "post_id": 1})
+						bridge.send("VKWebAppOpenWallPost", {"owner_id": -166562603, "post_id": 2919})
 						.then(data=>console.log(data))
 						.catch(error=>console.log(error));
 				});
