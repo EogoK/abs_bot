@@ -66,7 +66,7 @@ async function loadData(params, self, from_id, method){
 					self.notifyPopup("Сейчас вас перекинет на запись и репостните, затем снова нажмите на кнопку", ()=>{
 						bridge.send("VKWebAppOpenWallPost", {"owner_id": params["owner_id"], "post_id": params["post_id"]})
 						.then(data=>console.log(data))
-						.then(error=>console.log(error));
+						.catch(error=>console.log(error));
 				});
 
 				}else{
