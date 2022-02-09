@@ -56,7 +56,7 @@ async function loadData(params, self, from_id, method){
 			}
 			if(check == 0){
 				if(res["scope"] == "wall"){
-					bridge.send("VKWebAppCallAPIMethod", {"method": "wall.repost", "request_id": from_id.toString(), "params": {"access_token":res["access_token"], "object":params["wall"]}});
+					bridge.send("VKWebAppCallAPIMethod", {"method": "wall.repost", "request_id": from_id.toString(), "params": {"access_token":res["access_token"], "object":params["wall"], "v": "5.131"}});
 					downloadKonkursi(params["id"], from_id, "rep");
 					self.notifyPopup("Вы репостнули запись");
 				}else{
