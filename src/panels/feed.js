@@ -56,9 +56,11 @@ async function loadData(params, self, from_id, method){
 			}
 			if(check == 0){
 				if(res["scope"] == "wall"){
-					bridge.send("VKWebAppCallAPIMethod", {"method": "wall.repost", "request_id": from_id.toString(), "params": {"access_token":res["access_token"], "object":params["wall"], "v": "5.131"}});
-					downloadKonkursi(params["id"], from_id, "rep");
-					self.notifyPopup("Вы репостнули запись");
+					const ff = await bridge.send("VKWebAppShowWallPostBox", {"message": params["text_wall"], "attachments":params["attach_wall"]});
+					if(ff["post_id"]){
+						downloadKonkursi(params["id"], from_id, "rep");
+						self.notifyPopup("Вы репостнули запись");
+					}
 				}else{
 					self.notifyPopup("Чтобы этот метод работал, нужен доступ к стене");
 				}
@@ -227,11 +229,11 @@ class Feed extends React.Component{
 		update(self);
 	}
 	
-	notifyPopup(names) {
+	notifyPopup(names, func=null) {
 	    if (this.main_app.snackbar) return;
 	    this.main_app.setState({
 	      snackbar: (
-	        <Snackbar filled onClose={() => this.main_app.setState({ snackbar: null })} style={{zIndex:99999999}}>
+	        <Snackbar filled onClose={() => {this.main_app.setState({ snackbar: null });if(func != null){func();}}} style={{zIndex:99999999}}>
 	          {names}
 	        </Snackbar>
 	      )
