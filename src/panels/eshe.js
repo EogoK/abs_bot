@@ -17,22 +17,24 @@ async function ads(self_class){
 	if(ret == true){
 		var r = await bridge.send("VKWebAppShowNativeAds", {ad_format:"reward"})
 		.then(data => {
-
-			console.log(data.result);
+			console.log(data);
 			if(data.result == true){
 				bridge.send("VKWebAppSendPayload", {"group_id": 210513053, "payload": {"id": self_class.main_app.fetchedUser["id"], "how":"random_pack"}});
 			}})
 		.catch(error => {
+			console.log(error);
 			bridge.send("VKWebAppShowNativeAds", {ad_format:"interstitial"})
 			.then(data => {
-			console.log(data.result);
+			console.log(data);
 			if(data.result == true){
 				bridge.send("VKWebAppSendPayload", {"group_id": 210513053, "payload": {"id": self_class.main_app.fetchedUser["id"], "how":"random_pack"}});
 			}})
 			.catch(error => {
+				console.log(error)
 				self_class.notifyPopup("Рекламы нет :(");
 			});
 		});
+		console.log(r);
 	}else{
 		self_class.notifyPopup("Разрешите отправку сообщений от сообщества");
 	}
