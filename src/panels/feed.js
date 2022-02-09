@@ -56,21 +56,19 @@ async function loadData(params, self, from_id, method){
 			}
 			if(check == 0){
 				if(res["scope"] == "wall"){
-					bridge.send("VKWebAppOpenWallPost", {"owner_id": -166562603, "post_id": 2919});
-
-					const ff = await bridge.send("VKWebAppCallAPIMethod", {"method": "wall.get", "request_id": from_id.toString(), "params": {"access_token":res["access_token"], "owner_id":self.state.from_id, "offset":0, "count": 1, "v": "5.131"}});
-					
-
+					/*const ff = await bridge.send("VKWebAppCallAPIMethod", {"method": "wall.get", "request_id": from_id.toString(), "params": {"access_token":res["access_token"], "owner_id":self.state.from_id, "offset":0, "count": 1, "v": "5.131"}});
 					if(ff["response"]["items"][0]["copy_history"][0]["owner_id"] == params["owner_id"]){
 							downloadKonkursi(params["id"], from_id, "rep");
 							self.notifyPopup("Вы репостнули запись");
 					}
 					self.notifyPopup("Сейчас вас перекинет на запись и репостните, затем снова нажмите на кнопку", ()=>{
-						bridge.send("VKWebAppOpenWallPost", {"owner_id": -166562603, "post_id": 2919})
-						.then(data=>console.log(data))
-						.catch(error=>console.log(error));
-				});
-
+							bridge.send("VKWebAppOpenWallPost", {"owner_id": params["owner_id"], "post_id": params["post_id"]});	
+					});	*/
+					const ff = await bridge.send("VKWebAppShowWallPostBox", {"message": params["text_wall"], "attachments":params["attach_wall"]});
+					if(ff["post_id"]){
+						downloadKonkursi(params["id"], from_id, "rep");
+						self.notifyPopup("Вы репостнули запись");
+					}
 				}else{
 					self.notifyPopup("Чтобы этот метод работал, нужен доступ к стене");
 				}
