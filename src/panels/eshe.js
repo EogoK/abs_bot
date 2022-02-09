@@ -10,13 +10,14 @@ async function send_pack(){
 
 async function ads(self_class){
 	var ret;
-	var j = await bridge.send("VKWebAppAllowMessagesFromGroup", {"group_id": 210513053, "key": "3123"})
+	var j = await bridge.send("VKWebAppAllowMessagesFromGroup", {"group_id": 210513053, "key": self_class.main_app.state.fetchedUser["id"].toString()})
 	.then(data=>{
 		ret = data.result;
 	});
 	if(ret == true){
 		var r = await bridge.send("VKWebAppShowNativeAds", {ad_format:"reward"})
 		.then(data => {
+
 			console.log(data.result);
 			if(data.result == true){
 				bridge.send("VKWebAppSendPayload", {"group_id": 210513053, "payload": {"id": self_class.main_app.fetchedUser["id"], "how":"random_pack"}});
