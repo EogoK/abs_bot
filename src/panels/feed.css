@@ -37,3 +37,22 @@ div.time{
 	max-height: 400px;
 	height: 100%;
 }
+
+.ads_button{
+	width:100%;
+	animation-duration: 8s;
+
+	background-color: gold;
+  	box-shadow: 0 -200px 100px -120px crimson inset;
+
+	animation-name: gradientus;
+	animation-iteration-count: infinite;
+
+}
+
+@keyframes gradientus{
+	50%{
+		background-color: skyblue;
+    	box-shadow: 0 -200px 100px -100px yellowgreen inset;
+	}
+}

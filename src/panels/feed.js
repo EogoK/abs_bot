@@ -80,6 +80,26 @@ function Сheck_sost(elem, self, from_id){
 }
 
 
+
+async function ads(self_class){
+
+	var r = await bridge.send("VKWebAppShowNativeAds", {ad_format:"reward"})
+	.then(data => {
+		if(data.result == true){
+			self_class.notifyPopup("Ура вы получили 5% шанса к выйгрышу");
+		}})
+	.catch(error => {
+		bridge.send("VKWebAppShowNativeAds", {ad_format:"interstitial"})
+		.then(data => {
+		if(data.result == true){
+			self_class.notifyPopup("Ура вы получили 5% шанса к выйгрышу");
+		}})
+		.catch(error => {
+			self_class.notifyPopup("Рекламы нет :(");
+		});
+	});
+	console.log(r);
+}
 function panel_update(elem, self, from_id){
 	var Ret_modal_okno = Сheck_sost(elem, self, from_id);
 
@@ -88,6 +108,8 @@ function panel_update(elem, self, from_id){
 	<Group>
      <img id="image" src={gl_cors+elem["url"]}></img>
      	{Ret_modal_okno}
+     <Div style={{height:30}}>&nbsp;</Div>
+     	<Button onClick={()=>{ads(self);}} className="ads_button">5% к шансу выйгрыша</Button>	
      <Div style={{height:110}}>&nbsp;</Div>
 	</Group>);
 }
@@ -148,7 +170,6 @@ async function GetData(data, self, from_id){
 				</div>
 				</div>
 				</div>);
-		//console.log(gl_cors+elem["url"]);
 		mn = (
 			<ContentCard 
 			disable

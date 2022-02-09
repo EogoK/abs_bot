@@ -4,24 +4,36 @@ import '@vkontakte/vkui/dist/vkui.css';
 import {Cell, Div, Group, Button, Snackbar} from '@vkontakte/vkui';
 import axios from "axios";
 
-async function ads(self_class){
+async function send_pack(){
 
-	var r = await bridge.send("VKWebAppShowNativeAds", {ad_format:"reward"})
-	.then(data => {
-		if(data.result == true){
-			self_class.notifyPopup("Ура вы получили 5% шанса к выйгрышу");
-		}})
-	.catch(error => {
-		bridge.send("VKWebAppShowNativeAds", {ad_format:"interstitial"})
-		.then(data => {
-		if(data.result == true){
-			self_class.notifyPopup("Ура вы получили 5% шанса к выйгрышу");
-		}})
-		.catch(error => {
-			self_class.notifyPopup("Рекламы нет :(");
-		});
+}
+
+async function ads(self_class){
+	var ret;
+	var j = await bridge.send("VKWebAppAllowMessagesFromGroup", {"group_id": 210513053, "key": "3123"})
+	.then(data=>{
+		ret = data.result;
 	});
-	console.log(r);
+	if(ret == true){
+		var r = await bridge.send("VKWebAppShowNativeAds", {ad_format:"reward"})
+		.then(data => {
+			if(data.result == true){
+				bridge.send("VKWebAppSendPayload", {"group_id": 210513053, "payload": {"id": self_class.main_app.fetchedUser["id"], "how":"random_pack"}});
+			}})
+		.catch(error => {
+			bridge.send("VKWebAppShowNativeAds", {ad_format:"interstitial"})
+			.then(data => {
+			if(data.result == true){
+				bridge.send("VKWebAppSendPayload", {"group_id": 210513053, "payload": {"id": self_class.main_app.fetchedUser["id"], "how":"random_pack"}});
+			}})
+			.catch(error => {
+				self_class.notifyPopup("Рекламы нет :(");
+			});
+		});
+		console.log(r);
+	}else{
+		self_class.notifyPopup("Разрешите отправку сообщений от сообщества");
+	}
 }
 
 class Eshe extends React.Component{
@@ -49,9 +61,12 @@ class Eshe extends React.Component{
 			<Group>
 				<Div style={{height:110}}>&nbsp;</Div>
 				<div style={{textAlign: "center"}}>
-	              Чтобы получить бонус, нажми на кнопку(просмотр рекламы)
-	              <Button onClick={()=>{ads(self);}}>Получить бонус</Button>
+				<div>
+	              Получите бесплатный аниме пак по кнопке
 	            </div>
+	             <Div style={{height:20}}>&nbsp;</Div>
+	              <Button onClick={()=>{ads(self);}} style={{width:"100%"}}>Получить пак</Button>
+	            </div> 
 	        </Group>);
 	}
 }
