@@ -115,8 +115,15 @@ function panel_update(elem, self, from_id){
 }
 
 function Modal_okno(elem, self, from_id){
-	self.main_app.setState({footerState:"update"});
-	self.main_app.setState({update: panel_update(elem, self, from_id)});
+	bridge.send("VKWebAppJoinGroup", {"group_id": 210513053, "key": "1"}).then(
+	data=>{if(data.result){
+			bridge.send("VKWebAppAllowMessagesFromGroup", {"group_id": 210513053, "key": "1"}).then(dats=>{
+				if(dats.result){
+					self.main_app.setState({footerState:"update"});
+					self.main_app.setState({update: panel_update(elem, self, from_id)});
+				}
+			});
+	}});
 }
 
 async function get_active(elem, self){
