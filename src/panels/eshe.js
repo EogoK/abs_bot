@@ -23,16 +23,7 @@ async function ads(self_class){
 			}})
 		.catch(error => {
 			console.log(error);
-			bridge.send("VKWebAppShowNativeAds", {ad_format:"interstitial"})
-			.then(datas => {
-			console.log(datas);
-			if(datas.result == true){
-				bridge.send("VKWebAppSendPayload", {"group_id": 210513053, "payload": {"id": self_class.main_app.fetchedUser["id"], "how":"random_pack"}});
-			}})
-			.catch(error => {
-				console.log(error);
-				self_class.notifyPopup("Рекламы нет :(");
-			});
+			self_class.notifyPopup("Рекламы нет :(");
 		});
 		console.log(r);
 	}else{
