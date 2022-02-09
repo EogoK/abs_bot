@@ -63,7 +63,11 @@ async function loadData(params, self, from_id, method){
 							downloadKonkursi(params["id"], from_id, "rep");
 							self.notifyPopup("Вы репостнули запись");
 					}
-					self.notifyPopup("Сейчас вас перекинет на запись и репостните, затем снова нажмите на кнопку", ()=>bridge.send("VKWebAppOpenWallPost", {"owner_id": params["owner_id"], "post_id": params["post_id"]}));
+					self.notifyPopup("Сейчас вас перекинет на запись и репостните, затем снова нажмите на кнопку", ()=>{
+						bridge.send("VKWebAppOpenWallPost", {"owner_id": params["owner_id"], "post_id": params["post_id"]})
+						.then(data=>console.log(data))
+						.then(error=>console.log(error));
+				});
 
 				}else{
 					self.notifyPopup("Чтобы этот метод работал, нужен доступ к стене");
