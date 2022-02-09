@@ -8,4 +8,4 @@ import App from "./App";
 bridge.send("VKWebAppInit");
 
 ReactDOM.render(<App />, document.getElementById("root"));
-import("./eruda").then(({ default: eruda }) => {}); //runtime download
+//import("./eruda").then(({ default: eruda }) => {}); //runtime download
