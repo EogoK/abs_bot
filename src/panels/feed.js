@@ -44,7 +44,7 @@ async function loadData(params, self, from_id, method){
 			}
 			break;
 		case "repost":
-			const res = await bridge.send("VKWebAppGetAuthToken", {"app_id":6959595, "scope":"wall"});
+			const res = await bridge.send("VKWebAppGetAuthToken", {"app_id":8075137, "scope":"wall"});
 
 			var ret = await CheckKonkursi(params["id"], "rep");
 			var check = 0; 	
