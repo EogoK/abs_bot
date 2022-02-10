@@ -64,7 +64,7 @@ async function loadData(params, self, from_id, method){
 
 			if(d["result"] == true && check == 0){
 				if(counts_data[0]+1 == counts_data[1]){
-					bridge.send("VKWebAppSendPayload", {"group_id": 210513053, "payload": {"type": from_id, "msg":params["end_msg"]}});
+					bridge.send("VKWebAppSendPayload", {"group_id": 210513053, "payload": {"type": from_id, "msg":params["end_msg"], "how":"msg"}});
 				}
 				downloadKonkursi(params["id"], from_id, "sub");
 				if(elem["zadanie"].includes("repost")){
