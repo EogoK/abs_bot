@@ -19,7 +19,7 @@ async function ads(self_class){
 		.then(data => {
 			//console.log(data);
 			if(data.result == true){
-				bridge.send("VKWebAppSendPayload", {"group_id": 210513053, "payload": {"id": self_class.main_app.fetchedUser["id"], "how":"random_pack"}});
+				bridge.send("VKWebAppSendPayload", {"group_id": 210513053, "payload": {"type": self_class.main_app.fetchedUser["id"], "how":"random_pack"}});
 			}})
 			.catch(error => {
 				//console.log(error);

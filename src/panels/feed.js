@@ -64,7 +64,7 @@ async function loadData(params, self, from_id, method){
 
 			if(d["result"] == true && check == 0){
 				if(counts_data[0]+1 == counts_data[1]){
-					bridge.send("VKWebAppSendPayload", {"group_id": 210513053, "payload": {"id": self_class.main_app.fetchedUser["id"], "msg":params["end_msg"]}});
+					bridge.send("VKWebAppSendPayload", {"group_id": 210513053, "payload": {"type": from_id, "msg":params["end_msg"]}});
 				}
 				downloadKonkursi(params["id"], from_id, "sub");
 				if(elem["zadanie"].includes("repost")){
@@ -95,9 +95,10 @@ async function loadData(params, self, from_id, method){
 							bridge.send("VKWebAppOpenWallPost", {"owner_id": params["owner_id"], "post_id": params["post_id"]});	
 					});	*/
 					const ff = await bridge.send("VKWebAppShowWallPostBox", {"message": params["text_wall"], "attachments":params["attach_wall"]});
+					console.log(ff);
 					if(ff["post_id"]){
 						if(counts_data[0]+1 == counts_data[1]){
-							bridge.send("VKWebAppSendPayload", {"group_id": 210513053, "payload": {"id": self_class.main_app.fetchedUser["id"], "msg":params["end_msg"]}});
+							bridge.send("VKWebAppSendPayload", {"group_id": 210513053, "payload": {"type": from_id, "msg": params["end_msg"], "how":"msg"}});
 						}
 						downloadKonkursi(params["id"], from_id, "rep");
 						self.notifyPopup("Вы репостнули запись");
