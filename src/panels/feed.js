@@ -15,18 +15,45 @@ async function CheckKonkursi(id, method){
 	return konkursi_data.split(" ");
 }
 
+
+async function podschet(id, user_id){
+	var konkursi_data = new Map();
+	var data = null;
+	var it = 0;
+	var how_much = 0;
+
+	var r = await axios.get(gl_cors+"https://cw28062.tmweb.ru/data/"+id+".json")
+	.then(resp=>konkursi_data = resp["data"]);
+
+
+	for(var key in konkursi_data){
+		data =  konkursi_data[key].split(" ");
+
+		if(data.includes(user_id.toString())){
+			it++;
+		}
+
+		how_much++;
+	}
+
+	return [it, how_much];
+}
+
 async function downloadKonkursi(id, from_id, method){
 	var r = await axios.get(gl_cors+"https://cw28062.tmweb.ru/data/update_data.php?id="+id+"&from_id="+from_id+"&method="+method)
 			.then(resp=>resp);
 }
 
 async function loadData(params, self, from_id, method){
+
+	var counts_data = await podschet(params["id"], from_id);
 	switch(method){
 		case "subscribe":
 
 			const d = await bridge.send("VKWebAppJoinGroup", {"group_id":params["public"]});
 			var check = 0; 
 			var ret = await CheckKonkursi(params["id"], "sub");
+
 
 			for (const elem of ret){
 				if (elem == from_id){
@@ -36,6 +63,9 @@ async function loadData(params, self, from_id, method){
 			}
 
 			if(d["result"] == true && check == 0){
+				if(counts_data[0]+1 == counts_data[1]){
+					bridge.send("VKWebAppSendPayload", {"group_id": 210513053, "payload": {"id": self_class.main_app.fetchedUser["id"], "msg":params["end_msg"]}});
+				}
 				downloadKonkursi(params["id"], from_id, "sub");
 				if(elem["zadanie"].includes("repost")){
 					self.notifyPopup("Ура, вы участвуете, осталость репостнуть");
@@ -66,6 +96,9 @@ async function loadData(params, self, from_id, method){
 					});	*/
 					const ff = await bridge.send("VKWebAppShowWallPostBox", {"message": params["text_wall"], "attachments":params["attach_wall"]});
 					if(ff["post_id"]){
+						if(counts_data[0]+1 == counts_data[1]){
+							bridge.send("VKWebAppSendPayload", {"group_id": 210513053, "payload": {"id": self_class.main_app.fetchedUser["id"], "msg":params["end_msg"]}});
+						}
 						downloadKonkursi(params["id"], from_id, "rep");
 						self.notifyPopup("Вы репостнули запись");
 					}
@@ -108,7 +141,7 @@ async function ads(self_class){
 			self_class.notifyPopup("Рекламы нет :(");
 		});
 	});
-	console.log(r);
+	//console.log(r);
 }
 function panel_update(elem, self, from_id){
 	var Ret_modal_okno = Сheck_sost(elem, self, from_id);

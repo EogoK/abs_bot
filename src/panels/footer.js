@@ -38,7 +38,7 @@ class Footer extends React.Component {
 
 		var self = this.self;
 
-		console.log(self.state.footerState);
+		//console.log(self.state.footerState);
 		return(<FixedLayout vertical="bottom">
 			<Tabs>
 			<TabsItem 
