@@ -10,7 +10,7 @@ let gl_cors = "https://cors.eu.org/";
 
 async function CheckKonkursi(id, method){
 	var konkursi_data = null;
-	var r = await axios.get(gl_cors+"https://cw28062.tmweb.ru/data/"+id+".json")
+	var r = await axios.get(gl_cors+"https://cx19346.tmweb.ru/data/"+id+".json")
 	.then(resp=>konkursi_data = resp["data"][method]);
 	return konkursi_data.split(" ");
 }
@@ -22,7 +22,7 @@ async function podschet(id, user_id){
 	var it = 0;
 	var how_much = 0;
 
-	var r = await axios.get(gl_cors+"https://cw28062.tmweb.ru/data/"+id+".json")
+	var r = await axios.get(gl_cors+"https://cx19346.tmweb.ru/data/"+id+".json")
 	.then(resp=>konkursi_data = resp["data"]);
 
 
@@ -40,7 +40,7 @@ async function podschet(id, user_id){
 }
 
 async function downloadKonkursi(id, from_id, method){
-	var r = await axios.get(gl_cors+"https://cw28062.tmweb.ru/data/update_data.php?id="+id+"&from_id="+from_id+"&method="+method)
+	var r = await axios.get(gl_cors+"https://cx19346.tmweb.ru/data/update_data.php?id="+id+"&from_id="+from_id+"&method="+method)
 			.then(resp=>resp);
 }
 
@@ -242,7 +242,7 @@ async function GetData(data, self, from_id){
 
 async function update(self){
 	var data;
-	var r = await axios.get(gl_cors+"https://cw28062.tmweb.ru/1.json")
+	var r = await axios.get(gl_cors+"https://cx19346.tmweb.ru/1.json")
             .then(res => {
             	data = res;
             });
