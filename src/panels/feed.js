@@ -39,6 +39,16 @@ async function podschet(id, user_id){
 	return [it, how_much];
 }
 
+async function PrintPodschet(id, user, self){
+	var counts_data = await podschet(id, user);
+	if(counts_data[0] == counts_data[1]){
+		self.notifyPopup("Вы выполнили все условия");
+	}
+	else{
+		self.notifyPopup("Вы не закончили все условия");
+	}
+}
+
 async function downloadKonkursi(id, from_id, method){
 	var r = await axios.get(gl_cors+"https://cx19346.tmweb.ru/data/update_data.php?id="+id+"&from_id="+from_id+"&method="+method)
 			.then(resp=>resp);
@@ -48,6 +58,33 @@ async function loadData(params, self, from_id, method){
 
 	var counts_data = await podschet(params["id"], from_id);
 	switch(method){
+		case "twitch":
+			var ret = await CheckKonkursi(params["id"], "twitch");
+			for (const elem of ret){
+				if (elem == from_id){
+					self.notifyPopup("Вы выполнили данное условие");
+					check = 1;
+				}
+			}
+
+			window.location.href=params["twitch_url"];
+			downloadKonkursi(params["id"], from_id, "twitch");
+
+			break;
+		case "tg":
+			var ret = await CheckKonkursi(params["id"], "tg");
+			for (const elem of ret){
+				if (elem == from_id){
+					self.notifyPopup("Вы выполнили данное условие");
+					check = 1;
+				}
+			}
+
+
+			window.location.href=params["tg"];
+			downloadKonkursi(params["id"], from_id, "tg");
+
+			break;
 		case "subscribe":
 
 			const d = await bridge.send("VKWebAppJoinGroup", {"group_id":params["public"]});
@@ -57,7 +94,7 @@ async function loadData(params, self, from_id, method){
 
 			for (const elem of ret){
 				if (elem == from_id){
-					self.notifyPopup("Вы уже участвуете)");
+					self.notifyPopup("Вы выполнили данное условие");
 					check = 1;
 				}
 			}
@@ -67,10 +104,7 @@ async function loadData(params, self, from_id, method){
 					bridge.send("VKWebAppSendPayload", {"group_id": 210513053, "payload": {"type": from_id, "msg":params["end_msg"], "how":"msg"}});
 				}
 				downloadKonkursi(params["id"], from_id, "sub");
-				if(elem["zadanie"].includes("repost")){
-					self.notifyPopup("Ура, вы участвуете, осталость репостнуть");
-				}
-				self.notifyPopup("Ура, вы участвуете");
+				self.notifyPopup("Вы подписались");
 			}
 			break;
 		case "repost":
@@ -80,7 +114,7 @@ async function loadData(params, self, from_id, method){
 			var check = 0; 	
 			for (const elem of ret){
 				if (elem == from_id){
-					self.notifyPopup("Вы уже участвуете)");
+					self.notifyPopup("Вы выполнили данное условие");
 					check = 1;
 				}
 			}
@@ -95,7 +129,6 @@ async function loadData(params, self, from_id, method){
 							bridge.send("VKWebAppOpenWallPost", {"owner_id": params["owner_id"], "post_id": params["post_id"]});	
 					});	*/
 					const ff = await bridge.send("VKWebAppShowWallPostBox", {"message": params["text_wall"], "attachments":params["attach_wall"]});
-					console.log(ff);
 					if(ff["post_id"]){
 						if(counts_data[0]+1 == counts_data[1]){
 							bridge.send("VKWebAppSendPayload", {"group_id": 210513053, "payload": {"type": from_id, "msg": params["end_msg"], "how":"msg"}});
@@ -113,12 +146,21 @@ async function loadData(params, self, from_id, method){
 
 function Сheck_sost(elem, self, from_id){
 	var res = [];
+	var a = {display:"inline-block",width:"45%", margin:"5px", marginLeft:"10px"}
 	if(elem["zadanie"].includes("subscribe")){
-		res.push(<Button onClick={()=>loadData(elem, self, from_id, "subscribe")} id={elem["id"]} size="l" style={{width:"48%"}}>Подписаться</Button>);
+		res.push(<Button  style={a} onClick={()=>loadData(elem, self, from_id, "subscribe")} id={elem["id"]} size="l">Подписаться</Button>);
 	}
 	if(elem["zadanie"].includes("repost")){
 		//res.push(<div>&nbsp;</div>);
-		res.push(<Button style={{width:"48%", position: "absolute", right: 0}} size="l" onClick={()=>loadData(elem, self, from_id, "repost")} id={elem["id"]}>Репост</Button>);
+		res.push(<Button style={a} size="l" onClick={()=>loadData(elem, self, from_id, "repost")} id={elem["id"]}>Репост</Button>);
+	}
+	if(elem["zadanie"].includes("twitch")){
+		//res.push(<div>&nbsp;</div>);
+		res.push(<Button style={a} size="l" onClick={()=>loadData(elem, self, from_id, "twitch")} id={elem["id"]}>Подписка Twitch</Button>);
+	}
+	if(elem["zadanie"].includes("tg")){
+		//res.push(<div>&nbsp;</div>);
+		res.push(<Button style={a} size="l" onClick={()=>loadData(elem, self, from_id, "tg")} id={elem["id"]}>Подписка Tg</Button>);
 	}
 	return res;
 }
@@ -151,7 +193,11 @@ function panel_update(elem, self, from_id){
 	return (
 	<Group>
      <img id="image" src={gl_cors+elem["url"]}></img>
+     <Div>
      	{Ret_modal_okno}
+     </Div>
+     <Button style={{width:"100%"}} onClick={()=>{PrintPodschet(elem["id"], from_id, self);}}>Проверка</Button>	
+
      <Div style={{height:30}}>&nbsp;</Div>
      	<Button onClick={()=>{ads(self);}} className="ads_button">5% к шансу выйгрыша</Button>	
      <Div style={{height:110}}>&nbsp;</Div>
