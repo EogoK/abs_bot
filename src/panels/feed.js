@@ -6,7 +6,7 @@ import axios from "axios";
 import { Icon20Users } from '@vkontakte/icons';
 import "./feed.css";
 
-let gl_cors = "https://cors.eu.org/";
+let gl_cors = "https://corsanywhere.herokuapp.com/";
 
 async function CheckKonkursi(id, method){
 	var konkursi_data = null;
